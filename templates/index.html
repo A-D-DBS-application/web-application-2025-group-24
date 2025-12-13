@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}GroundLink  Confidential Land & Opportunity Matching{% endblock %}
+
+{% block body_class %}landing-page{% endblock %}
+
+{% block modals %}{% endblock %}
+{% block base_scripts %}{% endblock %}
+
+{% block header %}
+<header class="landing-header">
+    <div class="header-content">
+        <div class="logo">
+            <span class="logo-symbol" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="7" width="7" height="10" rx="2" />
+                    <rect x="14" y="7" width="7" height="10" rx="2" />
+                    <path d="M5 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" />
+                    <path d="M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" />
+                </svg>
+            </span>
+            <span class="logo-text">GroundLink</span>
+        </div>
+        <nav class="header-nav">
+            <a href="#features">Features</a>
+            <a href="#platform">Platform</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Confidential Land & Opportunity Matching</h1>
+        <p class="hero-subtitle">
+            We enable confidential, off-market connections between landowners and vetted developers, delivering a discreet, secure, and efficient path from first contact to agreement.
+        </p>
+        
+        <div class="cta-buttons">
+            <a href="/developer" class="cta-button primary">Developer Portal</a>
+            <a href="/property-owner" class="cta-button">Landowner Portal</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="features-container">
+        <h2 class="features-title">Why GroundLink?</h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="10" rx="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        <circle cx="12" cy="16" r="2" />
+                    </svg>
+                </div>
+                <h3 class="feature-title">Fully Discreet</h3>
+                <p class="feature-description">Sell your land without neighbors, family or the public market knowing.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="7" r="3" />
+                        <circle cx="17" cy="7" r="3" />
+                        <path d="M2 21v-1a6 6 0 0 1 6-6h0a6 6 0 0 1 6 6v1" />
+                        <path d="M14 21v-1a6 6 0 0 1 6-6h0" />
+                    </svg>
+                </div>
+                <h3 class="feature-title">Verified Developers</h3>
+                <p class="feature-description">Only vetted real estate developers gain access to listed land.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 17h18" />
+                        <path d="M7 13v4" />
+                        <path d="M12 9v8" />
+                        <path d="M17 5v12" />
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                    </svg>
+                </div>
+                <h3 class="feature-title">Fair Pricing</h3>
+                <p class="feature-description">No artificial markups. Direct, transparent deals between owner and developer.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works" id="how-it-works">
+    <div class="how-container">
+        <h2 class="how-title">How Does It Work?</h2>
+        <div class="steps-header-row">
+            <div class="steps-header">
+                <h3 class="steps-role-title">For Developers</h3>
+            </div>
+            <div class="steps-header">
+                <h3 class="steps-role-title">For Landowners</h3>
+            </div>
+        </div>
+        <div class="steps-columns">
+            <div class="steps-block">
+                <ol class="steps-list">
+                    <li class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content"><strong>Create an Account</strong><span>Register to access exclusive off-market land opportunities.</span></div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content"><strong>Explore Available Properties</strong><span>Use filters such as region and size to find land that fits your development goals.</span></div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content"><strong>Show Your Interest</strong><span>View property details and request the owner's contact information when you find a suitable plot.</span></div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content"><strong>Connect Directly</strong><span>Start communication immediately with the landowner for fast and efficient deals.</span></div>
+                    </li>
+                </ol>
+            </div>
+            <div class="steps-block">
+                <ol class="steps-list">
+                    <li class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content"><strong>Create an Account</strong><span>Make your free account to manage your land listings securely.</span></div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content"><strong>List Your Land</strong><span>Add your property with location, size, and a short description. You decide how much information is visible.</span></div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content"><strong>Receive Interest</strong><span>Developers can discreetly view your land and show interest when it matches their needs.</span></div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content"><strong>Close the Deal</strong><span>Connect with interested developers directly and negotiate the best terms for your land.</span></div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Role Selection Section -->
+<section class="role-selection" id="platform">
+    <div class="role-container">
+        <h2 class="role-title">Choose Your Portal</h2>
+        <p class="role-subtitle">Select the portal that benefits your role in the real estate industry</p>
+        <div class="role-cards">
+            <a href="/developer" class="role-card">
+                <h3 class="role-card-title">Developer Portal</h3>
+            </a>
+
+            <a href="/property-owner" class="role-card">
+                <h3 class="role-card-title">Landowner Portal</h3>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact" id="contact">
+    <div class="contact-container">
+        <h2 class="contact-title">Contact</h2>
+        <p class="contact-subtitle">Have a question or want to get started? Reach us directly.</p>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-row">
+                    <span class="contact-label">Email</span>
+                    <span class="contact-value">info@groundlink.com</span>
+                </div>
+                <div class="contact-row">
+                    <span class="contact-label">Phone</span>
+                    <span class="contact-value">+32 476 12 34 56</span>
+                </div>
+                <div class="contact-row">
+                    <span class="contact-label">Address</span>
+                    <span class="contact-value">Veldstraat 47, 9000 Gent</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <div class="footer-container"> 2025 GroundLink. Discrete land deals for professionals.</div>
+</footer>
+{% endblock %}

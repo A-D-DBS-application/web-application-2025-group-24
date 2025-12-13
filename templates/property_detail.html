@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Property Details - GroundLink{% endblock %}
+
+{% block body_class %}property-detail-page{% endblock %}
+
+{% block header %}
+<header class="detail-header">
+    <nav class="detail-nav">
+        <a href="/" class="detail-logo">GroundLink</a>
+        <a href="/developer" class="back-btn">← Back to Properties</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <div id="propertyDetail" class="property-detail">
+        <div class="loading">Loading property details...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentUser = null;
+    let property = null;
+    const propertyId = "{{ property_id }}";
+    
+    // Get current user
+    async function getCurrentUser() {
+        try {
+            const response = await fetch('/api/current-user');
+            const data = await response.json();
+            if (data.success) {
+                currentUser = data.user;
+            } else {
+                window.location.href = '/developer';
+            }
+        } catch (error) {
+            console.error('Error getting user:', error);
+            window.location.href = '/developer';
+        }
+    }
+    
+    // Load property details
+    async function loadPropertyDetails() {
+        try {
+            const response = await fetch(`/api/property/${propertyId}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                property = data.property;
+                displayPropertyDetails(property);
+            } else {
+                document.getElementById('propertyDetail').innerHTML = `
+                    <div class="error-message">
+                        <h3>Property Not Found</h3>
+                        <p>${data.error || 'The requested property could not be found.'}</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error loading property:', error);
+            document.getElementById('propertyDetail').innerHTML = `
+                <div class="error-message">
+                    <h3>Error Loading Property</h3>
+                    <p>There was an error loading the property details. Please try again.</p>
+                </div>
+            `;
+        }
+    }
+    
+    // Display property details
+    function displayPropertyDetails(property) {
+        const propertyDetail = document.getElementById('propertyDetail');
+        
+        // Generate image gallery HTML
+        let imageGalleryHtml = '';
+        if (property.image_urls && property.image_urls.length > 0) {
+            imageGalleryHtml = `
+                <div class="image-gallery">
+                    <div class="main-image">
+                        <img id="mainImage" src="${property.image_urls[0]}" alt="${property.property_name}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px;">
+                    </div>
+                    ${property.image_urls.length > 1 ? `
+                    <div class="thumbnail-gallery">
+                        ${property.image_urls.map((url, index) => `
+                            <img src="${url}" alt="Property image ${index + 1}" 
+                                 class="thumbnail ${index === 0 ? 'active' : ''}" 
+                                 onclick="changeMainImage('${url}', this)"
+                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer; margin-right: 10px; border: 2px solid ${index === 0 ? '#3498db' : 'transparent'};">
+                        `).join('')}
+                    </div>` : ''}
+                </div>
+            `;
+        } else {
+            imageGalleryHtml = `
+                <div class="no-images" style="width: 100%; height: 300px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: #6c757d; font-size: 1.1rem;">
+                    No images available for this property
+                </div>
+            `;
+        }
+        
+        propertyDetail.innerHTML = `
+            <div class="property-header">
+                <h1 class="property-title">${property.property_name || 'Unnamed Property'}</h1>
+                <span class="property-status">Available for Development</span>
+            </div>
+            
+            ${imageGalleryHtml}
+            
+            <div class="property-grid">
+                <div class="property-info">
+                    <div class="info-label">Province</div>
+                    <div class="info-value">${property.province || 'Not specified'}</div>
+                </div>
+                <div class="property-info">
+                    <div class="info-label">City</div>
+                    <div class="info-value">${property.city || 'Not specified'}</div>
+                </div>
+                <div class="property-info">
+                    <div class="info-label">Area</div>
+                    <div class="info-value">${property.size} m²</div>
+                </div>
+                <div class="property-info">
+                    <div class="info-label">Type</div>
+                    <div class="info-value">${property.type ? property.type.charAt(0).toUpperCase() + property.type.slice(1) : 'Land'}</div>
+                </div>
+                <div class="property-info">
+                    <div class="info-label">Price Range</div>
+                    <div class="info-value" style="color: #27ae60; font-weight: 600;">${(property.price_min !== null && property.price_max !== null) ? '€' + Number(property.price_min).toLocaleString('en-US') + ' - €' + Number(property.price_max).toLocaleString('en-US') : 'Not specified'}</div>
+                </div>
+                <div class="property-info">
+                    <div class="info-label">Listed Date</div>
+                    <div class="info-value">${new Date(property.created_at).toLocaleDateString('nl-BE')}</div>
+                </div>
+            </div>
+            
+            <div class="property-description">
+                <h3 class="description-title">Property Description</h3>
+                <p>${property.description || 'No description available for this property.'}</p>
+            </div>
+            
+            <div class="contact-section">
+                <button id="contactBtn" class="contact-btn" onclick="showContactInfo()">
+                    Contact Property Owner
+                </button>
+                <div id="contactInfo" class="contact-info">
+                    <h3 style="margin-bottom: 1rem; color: #27ae60;">Owner Contact Information</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <span class="contact-label">Email:</span>
+                            <span id="ownerEmail">Loading...</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label">Phone:</span>
+                            <span id="ownerPhone">Loading...</span>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                        Your developer ID has been registered for this property. The owner can see your interest.
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Function to change main image in gallery
+    function changeMainImage(imageUrl, thumbnail) {
+        document.getElementById('mainImage').src = imageUrl;
+        
+        // Update thumbnail active state
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.style.border = '2px solid transparent';
+            thumb.classList.remove('active');
+        });
+        
+        thumbnail.style.border = '2px solid #3498db';
+        thumbnail.classList.add('active');
+    }
+    
+    // Show contact info and register developer interest
+    async function showContactInfo() {
+        if (!currentUser) {
+            showNotification('Login Required', 'You must be logged in as a developer to view contact information.', 'warning');
+            return;
+        }
+        
+        const contactBtn = document.getElementById('contactBtn');
+        const contactInfo = document.getElementById('contactInfo');
+        
+        contactBtn.disabled = true;
+        contactBtn.textContent = 'Loading...';
+        
+        try {
+            const response = await fetch('/api/show-contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    property_id: propertyId,
+                    developer_id: currentUser.user_id
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                document.getElementById('ownerEmail').textContent = data.contact.email;
+                document.getElementById('ownerPhone').textContent = data.contact.phone || 'Not provided';
+                
+                contactInfo.style.display = 'block';
+                contactBtn.style.display = 'none';
+            } else {
+                showNotification('Error', data.error || 'Unable to retrieve contact information', 'error');
+                contactBtn.disabled = false;
+                contactBtn.textContent = 'Contact Property Owner';
+            }
+        } catch (error) {
+            console.error('Error showing contact:', error);
+            showNotification('Connection Error', 'There was an error retrieving the contact information. Please try again.', 'error');
+            contactBtn.disabled = false;
+            contactBtn.textContent = 'Contact Property Owner';
+        }
+    }
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', async function() {
+        await getCurrentUser();
+        await loadPropertyDetails();
+    });
+</script>
+{% endblock %}

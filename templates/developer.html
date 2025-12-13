@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block lang %}nl{% endblock %}
+
+{% block title %}Developer Dashboard - GroundLink{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block header %}
+<div class="dashboard-header">
+    <div class="header-content">
+        <h1>Developer Dashboard</h1>
+        <div class="nav">
+            <a href="/"> Back to Home</a>
+            <span id="headerUserInfo" style="display: none; color: white; font-weight: 500; margin-left: 15px;">Welcome, <span id="headerUserName"></span></span>
+            <button id="headerLogoutBtn" onclick="logout()" style="display: none; margin-left: 15px; padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">Logout</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-section" id="loginSection" style="display: block;">
+        <h2>Developer Login</h2>
+        <p>Enter your email address to access available properties.</p>
+        <br>
+        <div style="max-width: 400px; margin: 0 auto;">
+            <div class="form-group">
+                <label for="developerEmail">Email Address</label>
+                <input type="email" id="developerEmail" placeholder="developer@example.com">
+            </div>
+            <button class="btn" onclick="loginDeveloper()" style="width: 100%;">Login</button>
+            <button id="createDevAccountBtn" class="btn btn-success" onclick="showRegisterDeveloper()" style="width: 100%; margin-top: 10px; background: #27ae60; cursor: pointer;">Create Account</button>
+        </div>
+    </div>
+
+    <div class="register-section" id="registerDeveloperSection" style="display: none;">
+        <h2>Create Developer Account</h2>
+        <br>
+        <div style="max-width: 400px; margin: 0 auto;">
+            <div class="form-group">
+                <label for="regDevFirstName">First Name</label>
+                <input type="text" id="regDevFirstName" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <label for="regDevLastName">Last Name</label>
+                <input type="text" id="regDevLastName" placeholder="Last Name">
+            </div>
+            <div class="form-group">
+                <label for="regDevEmail">Email Address</label>
+                <input type="email" id="regDevEmail" placeholder="developer@example.com">
+            </div>
+            <div class="form-group">
+                <label for="regDevPhone">Phone Number</label>
+                <input type="tel" id="regDevPhone" placeholder="Phone Number">
+            </div>
+            <div class="form-group">
+                <label for="regDevCompany">Company Name</label>
+                <input type="text" id="regDevCompany" placeholder="Company Name">
+            </div>
+            <div class="form-group">
+                <label for="regDevVAT">VAT Number</label>
+                <input type="text" id="regDevVAT" placeholder="BE0123456789">
+            </div>
+            <button class="btn" onclick="registerDeveloper()" style="width: 100%;">Create Account</button>
+            <button class="btn btn-secondary" onclick="showLoginDeveloper()" style="width: 100%; margin-top: 10px;">Back to Login</button>
+        </div>
+    </div>
+
+    <div id="developerContent" style="display: none;">
+    <div class="search-section">
+        <h2>Search Available Properties</h2>
+
+        <form id="searchForm">
+            <div class="search-labels">
+                <span>Province</span>
+                <span>City</span>
+                <span>Size (m²)</span>
+                <span>Type</span>
+                <span>Max Price (€)</span>
+                <span></span>
+            </div>
+            <div class="search-bar">
+                <select id="province">
+                    <option value="">All Provinces</option>
+                    <option value="Antwerpen">Antwerpen</option>
+                    <option value="Brussel">Brussel</option>
+                    <option value="Henegouwen">Henegouwen</option>
+                    <option value="Limburg">Limburg</option>
+                    <option value="Luik">Luik</option>
+                    <option value="Luxemburg">Luxemburg</option>
+                    <option value="Namen">Namen</option>
+                    <option value="Oost-Vlaanderen">Oost-Vlaanderen</option>
+                    <option value="Vlaams-Brabant">Vlaams-Brabant</option>
+                    <option value="Waals-Brabant">Waals-Brabant</option>
+                    <option value="West-Vlaanderen">West-Vlaanderen</option>
+                </select>
+
+                <input type="text" id="city" placeholder="e.g. Gent">
+
+                <input type="number" id="minArea" placeholder="e.g. 1000">
+
+                <select id="type">
+                    <option value="">All Types</option>
+                    <option value="building">Building</option>
+                    <option value="land">Land</option>
+                </select>
+
+                <input type="number" id="maxPrice" placeholder="e.g. 500000">
+
+                <button type="submit" class="search-btn">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="properties-section">
+        <h2>Available Properties</h2>
+        <div id="propertiesList">
+            <p style="text-align: center; color: #666;">Loading properties...</p>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Check if user is already logged in
+    function checkLoginStatus() {
+        fetch('/api/current-user')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.user.user_type === 'developer') {
+                showDeveloperContent(data.user.user_data);
+                loadProperties();
+            }
+        });
+    }
+
+    // Login function
+    function loginDeveloper() {
+        const developerEmail = document.getElementById('developerEmail').value.trim();
+        
+        if (!developerEmail) {
+            showNotification('Email Required', 'Please enter your email address.', 'warning');
+            return;
+        }
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: developerEmail,
+                user_type: 'developer'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showDeveloperContent(data.user_data);
+                loadProperties();
+            } else {
+                showNotification('Login Failed', data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Login error:', error);
+            showNotification('Login Error', 'An error occurred while logging in. Please try again.', 'error');
+        });
+    }
+
+    // Registration functions
+    function showRegisterDeveloper() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('registerDeveloperSection').style.display = 'block';
+    }
+
+    function showLoginDeveloper() {
+        document.getElementById('registerDeveloperSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    }
+
+    function registerDeveloper() {
+        const firstName = document.getElementById('regDevFirstName').value.trim();
+        const lastName = document.getElementById('regDevLastName').value.trim();
+        const email = document.getElementById('regDevEmail').value.trim();
+        const phone = document.getElementById('regDevPhone').value.trim();
+        const company = document.getElementById('regDevCompany').value.trim();
+        const vatNumber = document.getElementById('regDevVAT').value.trim();
+        
+        if (!firstName || !lastName || !email || !phone || !company || !vatNumber) {
+            showNotification('Missing Information', 'Please fill in all required fields.', 'warning');
+            return;
+        }
+
+        fetch('/api/register-developer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                phone_number: phone,
+                company_name: company,
+                vat_number: vatNumber
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Account Created', 'Your account has been created successfully! An admin will verify your account shortly. You will be able to log in once verified.', 'success');
+                showLoginDeveloper();
+                document.getElementById('developerEmail').value = email;
+            } else {
+                showNotification('Registration Failed', data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Registration error:', error);
+            showNotification('Registration Error', 'An error occurred while creating your account. Please try again.', 'error');
+        });
+    }
+
+    // Show developer content after login
+    function showDeveloperContent(userData) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('registerDeveloperSection').style.display = 'none';
+        document.getElementById('developerContent').style.display = 'block';
+        
+        const firstName = userData.first_name || '';
+        const lastName = userData.last_name || '';
+        const userName = `${firstName} ${lastName}`.trim() || 'Developer';
+        
+        // Update header with user info
+        document.getElementById('headerUserName').textContent = userName;
+        document.getElementById('headerUserInfo').style.display = 'inline';
+        document.getElementById('headerLogoutBtn').style.display = 'inline-block';
+    }
+
+    function logout() {
+        fetch('/api/logout', { method: 'POST' })
+        .then(() => {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('registerDeveloperSection').style.display = 'none';
+            document.getElementById('developerContent').style.display = 'none';
+            document.getElementById('headerUserInfo').style.display = 'none';
+            document.getElementById('headerLogoutBtn').style.display = 'none';
+            document.getElementById('developerEmail').value = '';
+        });
+    }
+
+    function loadProperties() {
+        const searchProvince = document.getElementById('province')?.value || '';
+        const searchCity = document.getElementById('city')?.value?.trim() || '';
+        const minSize = document.getElementById('minArea')?.value || '';
+        const searchType = document.getElementById('type')?.value || '';
+        const maxPrice = document.getElementById('maxPrice')?.value || '';
+        
+        let url = '/api/properties?';
+        if (searchProvince) url += `province=${encodeURIComponent(searchProvince)}&`;
+        if (searchCity) url += `city=${encodeURIComponent(searchCity)}&`;
+        if (minSize) url += `min_size=${minSize}&`;
+        if (searchType) url += `type=${encodeURIComponent(searchType)}&`;
+        if (maxPrice) url += `max_price=${encodeURIComponent(maxPrice)}&`;
+        
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayProperties(data.properties);
+            } else {
+                document.getElementById('propertiesList').innerHTML = 
+                    `<p style="text-align: center; color: red;">Error: ${data.error}</p>`;
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            document.getElementById('propertiesList').innerHTML = 
+                '<p style="text-align: center; color: red;">Error loading properties.</p>';
+        });
+    }
+
+    // Add searchProperties function that calls loadProperties
+    function searchProperties() {
+        loadProperties();
+    }
+
+    function displayProperties(properties) {
+        const propertiesList = document.getElementById('propertiesList');
+        
+        if (properties.length === 0) {
+            propertiesList.innerHTML = '<p style="text-align: center; color: #666;">No properties found with the current filters.</p>';
+            return;
+        }
+        
+        propertiesList.innerHTML = properties.map(property => {
+            const firstImage = property.image_urls && property.image_urls.length > 0 ? property.image_urls[0] : null;
+            const imageHtml = firstImage ? 
+                `<img src="${firstImage}" class="property-image" alt="${property.property_name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px 8px 0 0;">` : 
+                `<div style="width: 100%; height: 150px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 8px 8px 0 0; color: #6c757d;">No Image</div>`;
+            
+            // Format price for display
+            const priceDisplay = (property.price_min !== null && property.price_max !== null) ? 
+                `€${Number(property.price_min).toLocaleString('en-US')} - €${Number(property.price_max).toLocaleString('en-US')}` : 
+                'Not specified';
+            
+            return `
+                <div class="property-card" onclick="viewPropertyDetails(${property.property_id})" style="overflow: hidden;">
+                    ${imageHtml}
+                    <div style="padding: 15px;">
+                        <strong>${property.property_name || 'Unnamed Property'}</strong>
+                        <p>${property.province || 'Unknown'}${property.city ? ', ' + property.city : ''}${property.size ? ', ' + property.size + ' m²' : ''}</p>
+                        <p>Type: ${property.type ? property.type.charAt(0).toUpperCase() + property.type.slice(1) : 'Land'}</p>
+                        <p style="color: #27ae60; font-weight: 600;">Price: ${priceDisplay}</p>
+                        ${property.image_urls && property.image_urls.length > 1 ? `<small style="color: #6c757d;">${property.image_urls.length} images</small>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function viewPropertyDetails(propertyId) {
+        window.location.href = `/property/${propertyId}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        checkLoginStatus();
+        loadProperties();
+        document.getElementById('createDevAccountBtn')
+            .addEventListener('click', showRegisterDeveloper);
+        const searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                loadProperties();
+            });
+        }
+    });
+</script>
+{% endblock %}
