@@ -36,18 +36,15 @@ To answer this the MVP focuses on two core features
 Landowners can create a land listing with location size price and optional anonymity
 Developers can log in browse available listings and respond
 
-No payment system valuation engine or advanced matching is included at this stage.
-Placing viewing and responding to listings is sufficient to validate the concept.
-
 Why this MVP is Valuable
 
 The MVP is low complexity but high validation value
 It allows fast testing of interest on both sides of the market
 It forms a scalable foundation for future features such as
-Automated valuation
-AI based matching
-Notary integrations
-Premium developer access
+> Automated valuation
+> AI based matching
+> Notary integrations
+> Premium developer access
 
 Kanban Board
 
@@ -82,4 +79,3 @@ Supabase is used for database storage authentication and image storage.
 Other Information
 
 This project was developed as part of the A&D DBS course.
-The focus is on validating a real world problem using a minimal but functional web application.
