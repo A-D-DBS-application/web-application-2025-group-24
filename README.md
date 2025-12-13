@@ -41,10 +41,10 @@ Why this MVP is Valuable
 The MVP is low complexity but high validation value
 It allows fast testing of interest on both sides of the market
 It forms a scalable foundation for future features such as
-> Automated valuation
-> AI based matching
-> Notary integrations
-> Premium developer access
+Automated valuation
+AI based matching
+Notary integrations
+Premium developer access
 
 Kanban Board
 
