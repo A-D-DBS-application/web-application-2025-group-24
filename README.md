@@ -79,3 +79,4 @@ Supabase is used for database storage authentication and image storage.
 Other Information
 
 This project was developed as part of the A&D DBS course.
+The focus is on validating a real world problem using a minimal but functional web application.
