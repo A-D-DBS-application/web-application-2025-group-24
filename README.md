@@ -46,37 +46,28 @@ AI based matching
 Notary integrations
 Premium developer access
 
-Kanban Board
-
-Miro board
+Kanban Board:
 https://miro.com/app/board/uXjVJwfM1RM=/
 
-UI Prototype
-
+UI Prototype:
 Lovable
 https://lovable.dev/projects/032f86ea-8bd2-4d3b-b60b-ba8dcca7a68c?permissionView=main
-
 Figma
 https://www.figma.com/make/JyE2BWxF58h0nvDnAwRvb4/Discreet-Land-Sale-Platform?node-id=0-4&p=f&t=TuZWftnpnDQQe63a-0
 
-Live Application
-
+Live Application:
 Render deployment
 https://group-24-4myd.onrender.com/
 
-Demo Video
-
+Demo Video:
 YouTube
 https://www.youtube.com/watch?v=5l8xzvWOSDg
 
-Supabase
-
+Supabase:
 Project dashboard
 https://supabase.com/dashboard/project/gdgxsgbgppresinempzk/database/schemas
-
 Supabase is used for database storage authentication and image storage.
 
-Other Information
-
+Other Information:
 This project was developed as part of the A&D DBS course.
 The focus is on validating a real world problem using a minimal but functional web application.
