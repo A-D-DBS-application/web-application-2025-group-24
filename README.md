@@ -50,20 +50,25 @@ Kanban Board:
 https://miro.com/app/board/uXjVJwfM1RM=/
 
 UI Prototype:
+
 Lovable
 https://lovable.dev/projects/032f86ea-8bd2-4d3b-b60b-ba8dcca7a68c?permissionView=main
+
 Figma
 https://www.figma.com/make/JyE2BWxF58h0nvDnAwRvb4/Discreet-Land-Sale-Platform?node-id=0-4&p=f&t=TuZWftnpnDQQe63a-0
 
 Live Application:
+
 Render deployment
 https://group-24-4myd.onrender.com/
 
 Demo Video:
+
 YouTube
 https://www.youtube.com/watch?v=5l8xzvWOSDg
 
 Supabase:
+
 Project dashboard
 https://supabase.com/dashboard/project/gdgxsgbgppresinempzk/database/schemas
 Supabase is used for database storage authentication and image storage.
